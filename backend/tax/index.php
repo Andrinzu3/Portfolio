@@ -8,5 +8,5 @@
 */
 
 add_action('init', function () {
-    // require_once __DIR__ . '/_taxonomy.php';
+     require_once __DIR__ . '/_projekt_kategorie.php';
 }, 0);
