@@ -15,7 +15,10 @@
             } else {
                 // -> Header ist während dem Intro versteckt (Sicherheit: nach 5s sowieso wieder da)
                 document.documentElement.classList.add('intro-running');
-                setTimeout(function () { document.documentElement.classList.remove('intro-running'); }, 5000);
+                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    document.documentElement.classList.add('intro-logo');
+                }
+                                setTimeout(function () { document.documentElement.classList.remove('intro-running'); document.documentElement.classList.add('intro-play', 'intro-split'); }, 5000);
             }
             sessionStorage.setItem('az-intro', '1');
         } catch (e) {}

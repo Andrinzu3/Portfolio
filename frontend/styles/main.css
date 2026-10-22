@@ -85,18 +85,21 @@ img, video { display: block; max-width: 100%; }
 .is-active { color: var(--accent); }
 
 .site-footer {
+    /* -> Alles auf einer Linie: [Kontakt] MAIL ......... Impressum © */
     position: relative;
     z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 32px;
     background: var(--bg);
-    padding: 96px var(--pad) 48px;
+    padding: 40px var(--pad);
     border-top: 1px solid var(--line);
 }
-.site-footer .label { margin-bottom: 24px; }
+.site-footer .label { margin: 0; }
 .site-footer__mail {
-    display: inline-block;
-    margin-bottom: 56px;
     font-family: var(--font-title);
-    font-size: clamp(22px, 2.4vw, 36px);
+    font-size: clamp(18px, 1.8vw, 26px);
     font-weight: 800;
     line-height: 1;
     text-transform: uppercase;
@@ -105,8 +108,9 @@ img, video { display: block; max-width: 100%; }
 .site-footer__bottom {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 16px;
+    align-items: center;
+    gap: 16px 28px;
+    margin-left: auto;
     font-size: 15px;
     color: var(--muted);
 }
@@ -149,6 +153,44 @@ img, video { display: block; max-width: 100%; }
 .hero__title { margin: 0; line-height: 0; }
 .wordmark { display: block; width: min(76vw, 1040px); height: auto; }
 
+/* -> Intro: AZ-Logo in der Mitte, dann fliegen A und Z an ihren Platz im Namen */
+.wordmark path,
+.wordmark rect { transform-box: view-box; transform-origin: 0 0; }
+.wm-logo-z { display: none; fill: var(--accent); }
+.intro-logo .wm-logo-z { display: inline; }
+/* Phase 1: Logo steht in der Mitte, solange die Intro-Bilder laufen (Dauer setzt main.js).
+   Es wächst zusammen mit dem Namen (.hero__grow) – also gleich schnell. */
+.intro-logo .wm-a,
+.intro-logo .wm-logo-z { animation: wm-grow var(--intro-dauer, 2.5s) linear both; }
+.intro-logo:not(.intro-play) .wm-a,
+.intro-logo:not(.intro-play) .wm-logo-z { animation-play-state: paused; } /* wartet, bis die Bilder geladen sind */
+.intro-logo .wm-z,
+.intro-logo .wm-rest { opacity: 0; }
+/* Phase 2: Bilder sind durch -> A und Z fliegen an ihren Platz, Rest erscheint */
+.intro-logo.intro-split .wm-a { animation: wm-a-split 1s cubic-bezier(.7, 0, .2, 1) both; }
+.intro-logo.intro-split .wm-logo-z { animation: wm-z-split 1s cubic-bezier(.7, 0, .2, 1) both; }
+.intro-logo.intro-split .wm-z { animation: wm-fade 0.35s ease 0.75s both; }
+.intro-logo.intro-split .wm-rest { animation: wm-rest 0.6s ease calc(0.7s + var(--i) * 0.05s) both; }
+@keyframes wm-grow {
+    /* Logo startet etwas kleiner und wächst bis zur Grösse, aus der es auseinanderfliegt */
+    from { transform: translate(117.7px, 18.1px) scale(1.4); }
+    to   { transform: translate(109.9px, 13.1px) scale(1.6); }
+}
+@keyframes wm-a-split {
+    from { transform: translate(109.9px, 13.1px) scale(1.6); }
+    to   { transform: none; }
+}
+@keyframes wm-z-split {
+    0%   { transform: translate(109.9px, 13.1px) scale(1.6); opacity: 1; }
+    75%  { opacity: 1; }
+    100% { transform: translate(70.5px, 56.15px) scale(1.2, 0.993); opacity: 0; }
+}
+@keyframes wm-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes wm-rest {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+}
+
 .hero__sub {
     position: absolute;
     left: var(--pad);
@@ -172,18 +214,37 @@ img, video { display: block; max-width: 100%; }
 
 .after-hero { position: relative; z-index: 10; background: var(--bg); padding-top: 1px; }
 
-.bereiche {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 12px 32px;
-    margin: 0 var(--pad);
-    padding: 18px 0;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    font-size: 17px;
-    color: var(--accent);
+/* -> Filmstreifen mit den Bereichen, wird endlos durchtransportiert */
+.filmstreifen {
+    overflow: hidden;
+    border-top: 1px solid var(--accent);
+    border-bottom: 1px solid var(--accent);
 }
+.filmstreifen__band {
+    display: flex;
+    width: max-content;
+    animation: film-transport 40s linear infinite;
+    will-change: transform;
+}
+@keyframes film-transport { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.filmstreifen__spur {
+    display: flex;
+    padding: 17px 0; /* Platz für die Löcher oben und unten */
+    /* Perforation: kleine abgerundete Rechtecke oben und unten */
+    background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='5'%3E%3Crect x='0' y='0' width='8' height='5' rx='1.5' fill='%23F0A23B'/%3E%3C/svg%3E") left 5px / 16px 5px repeat-x,
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='5'%3E%3Crect x='0' y='0' width='8' height='5' rx='1.5' fill='%23F0A23B'/%3E%3C/svg%3E") left calc(100% - 5px) / 16px 5px repeat-x;
+}
+.filmstreifen__bild {
+    width: 208px; /* Vielfaches von 16px, damit die Löcher nahtlos weiterlaufen */
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--accent);
+    white-space: nowrap;
+}
+.filmstreifen .br::before,
+.filmstreifen .br::after { content: none; } /* Wörter ohne Klammern */
 
 .section { padding: 96px var(--pad); }
 .section-title {
@@ -250,7 +311,7 @@ img, video { display: block; max-width: 100%; }
 
 .projekt-body {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, calc(46vh * 16 / 9)) minmax(280px, 1fr); /* Hauptbild max. 46% der Bildschirmhöhe */
     gap: 48px;
     align-items: start;
     padding: 32px var(--pad) 32px;
@@ -287,13 +348,14 @@ img, video { display: block; max-width: 100%; }
 .richtext a { color: var(--accent); text-decoration: underline; }
 
 .galerie {
-    /* -> Bilder in ihrem echten Format (nicht abgeschnitten), wie ein Mauerwerk */
-    columns: 3 280px;
-    column-gap: 20px;
-    padding: 0 var(--pad) 50vh; /* Platz, damit «Nächstes Projekt» erst beim Scrollen kommt */
+    /* -> Alle Bilder gleich hoch, ganzes Bild sichtbar (nichts abgeschnitten) */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 0 var(--pad) 72px;
 }
-.galerie__item { margin: 0 0 20px; break-inside: avoid; }
-.galerie__item img { display: block; width: 100%; height: auto; background: var(--card); }
+.galerie__item { margin: 0; height: clamp(140px, 22vh, 240px); }
+.galerie__item img { display: block; height: 100%; width: auto; max-width: 100%; object-fit: cover; background: var(--card); }
 
 .next-projekt {
     display: flex;
@@ -414,23 +476,25 @@ img, video { display: block; max-width: 100%; }
     .logo { height: 24px; }
     .hero { min-height: 100svh; height: 100svh; padding: 24px var(--pad) 120px; }
     .hero__sub { bottom: 28px; font-size: 20px; }
-    .bereiche { gap: 8px 18px; justify-content: flex-start; }
+    .filmstreifen__bild { width: 144px; font-size: 13px; }
     .section { padding-top: 56px; padding-bottom: 56px; gap: 24px; }
     .split { padding-top: 32px; padding-bottom: 32px; gap: 20px; }
     .page-intro { padding-top: 8px; padding-bottom: 24px; }
     .page-title, .projekt-title { font-size: 8vw; overflow-wrap: anywhere; }
-    .projekt-body { gap: 32px; padding-top: 32px; padding-bottom: 56px; }
+    .projekt-body { gap: 32px; padding-top: 24px; padding-bottom: 24px; }
     .about { padding-bottom: 56px; gap: 32px; }
-    .galerie { columns: 2 140px; column-gap: 12px; padding-bottom: 40vh; }
-    .galerie__item { margin-bottom: 12px; }
+    .galerie { gap: 10px; padding-bottom: 48px; }
+    .galerie__item { height: 120px; }
     .next-projekt { padding: 44px var(--pad) 52px; }
-    .site-footer { padding-top: 64px; padding-bottom: 32px; }
-    .site-footer__mail { margin-bottom: 36px; }
+    .site-footer { padding-top: 32px; padding-bottom: 32px; }
+    .site-footer__bottom { margin-left: 0; }
 }
 
 /* -> Weniger Bewegung, wenn im System eingestellt */
 @media (prefers-reduced-motion: reduce) {
-    .hero__grow, .hero__frame.is-active { animation: none; }
+    .hero__grow, .hero__frame.is-active, .filmstreifen__band,
+    .intro-logo .wm-a, .intro-logo .wm-z, .intro-logo .wm-rest { animation: none; opacity: 1; }
+    .intro-logo .wm-logo-z { display: none; }
     .dev-img { filter: none; transition: none; }
     html { scroll-behavior: auto; }
 }

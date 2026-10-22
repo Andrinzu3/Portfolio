@@ -6,9 +6,9 @@ $projekte = get_projekt_ids();
 ?>
 <section class="hero" data-hero>
     <div class="hero__media" aria-hidden="true">
-        <?php foreach ($medien as $m) : ?>
+        <?php foreach ($medien as $i => $m) : ?>
             <?php if ($m['type'] === 'image') : ?>
-                <img class="hero__frame" data-intro-frame src="<?= esc_url($m['src']) ?>" alt="">
+                <img class="hero__frame" data-intro-frame src="<?= esc_url($m['src']) ?>"<?php if ($m['srcset']) : ?> srcset="<?= esc_attr($m['srcset']) ?>" sizes="100vw"<?php endif; ?> alt="" decoding="async"<?= $i === 0 ? ' fetchpriority="high"' : '' ?>>
             <?php else : ?>
                 <video class="hero__frame" data-intro-frame src="<?= esc_url($m['src']) ?>" muted autoplay loop playsinline preload="auto"></video>
             <?php endif; ?>
@@ -30,10 +30,24 @@ $projekte = get_projekt_ids();
 
 <div class="after-hero">
     <?php if ($bereiche) : ?>
-        <div class="bereiche">
-            <?php foreach ($bereiche as $b) : ?>
-                <span class="br"><?= esc_html($b) ?></span>
-            <?php endforeach; ?>
+        <?php
+        // -> Wörter so oft wiederholen, dass der Streifen breiter als der Bildschirm ist
+        $bilder = $bereiche;
+        while (count($bilder) < 10) {
+            $bilder = array_merge($bilder, $bereiche);
+        }
+        ?>
+        <div class="filmstreifen">
+            <span class="sr-only"><?= esc_html(implode(', ', $bereiche)) ?></span>
+            <div class="filmstreifen__band" aria-hidden="true">
+                <?php for ($i = 0; $i < 2; $i++) : // zweimal hintereinander = nahtlose Schlaufe ?>
+                    <div class="filmstreifen__spur">
+                        <?php foreach ($bilder as $b) : ?>
+                            <span class="filmstreifen__bild"><span class="br"><?= esc_html($b) ?></span></span>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endfor; ?>
+            </div>
         </div>
     <?php endif; ?>
 

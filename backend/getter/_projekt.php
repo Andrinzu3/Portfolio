@@ -1,25 +1,42 @@
 <?php
- 
-// -> IDs aller Projekte in der festgelegten Reihenfolge
+
+// -> IDs aller Projekte, sortiert nach Projektdatum (neuestes zuerst)
 function get_projekt_ids(): array
 {
-    return get_posts([
+    $ids = get_posts([
         'post_type'   => 'projekt',
         'numberposts' => -1,
-        'orderby'     => ['menu_order' => 'ASC', 'date' => 'DESC'],
+        'orderby'     => 'date',
+        'order'       => 'DESC',
         'fields'      => 'ids',
     ]);
+    usort($ids, fn($a, $b) => strcmp(get_projekt_datum($b), get_projekt_datum($a)));
+    return $ids;
 }
- 
+
+// -> Projektdatum als "JJJJ-MM-TT" (Fallback: altes Feld "Jahr", sonst Veröffentlichungsdatum)
+function get_projekt_datum(int $id): string
+{
+    $datum = get_post_meta($id, '_datum', true);
+    if ($datum) {
+        return $datum;
+    }
+    $jahr = get_post_meta($id, '_jahr', true);
+    if ($jahr) {
+        return $jahr . '-01-01';
+    }
+    return get_the_date('Y-m-d', $id);
+}
+
 // -> Alle Daten eines Projekts für das Frontend
 function get_projekt_data(int $id): array
 {
     $terms = get_the_terms($id, 'projekt_kategorie');
     $kategorie = ($terms && !is_wp_error($terms)) ? $terms[0]->name : '';
- 
+
     $cover_id = carbon_get_post_meta($id, 'cover');
     $video_url = carbon_get_post_meta($id, 'video_url');
- 
+
     $galerie = [];
     foreach ((array) carbon_get_post_meta($id, 'galerie') as $item) {
         $bild_id = (int) ($item['bild'] ?? 0);
@@ -31,13 +48,13 @@ function get_projekt_data(int $id): array
             ];
         }
     }
- 
+
     return [
         'id'               => $id,
         'titel'            => get_the_title($id),
         'url'              => get_permalink($id),
         'kategorie'        => $kategorie,
-        'jahr'             => carbon_get_post_meta($id, 'jahr'),
+        'jahr'             => substr(get_projekt_datum($id), 0, 4),
         'rolle'            => carbon_get_post_meta($id, 'rolle'),
         'kontext'          => carbon_get_post_meta($id, 'kontext'),
         'lead'             => carbon_get_post_meta($id, 'beschreibung_lead'),
@@ -50,7 +67,7 @@ function get_projekt_data(int $id): array
         'farbe'            => get_akzent_hex(carbon_get_post_meta($id, 'farbe')),
     ];
 }
- 
+
 // -> Vorschaubild eines YouTube- oder Vimeo-Videos (wird 1 Woche zwischengespeichert)
 function get_video_thumbnail(?string $url): ?array
 {
@@ -59,7 +76,7 @@ function get_video_thumbnail(?string $url): ?array
     }
     $cache_key = 'video_thumb_' . md5($url);
     $src = get_transient($cache_key);
- 
+
     if ($src === false) {
         $src = '';
         // YouTube: Bild in hoher Auflösung direkt über die Video-ID
@@ -78,10 +95,10 @@ function get_video_thumbnail(?string $url): ?array
         }
         set_transient($cache_key, $src, WEEK_IN_SECONDS);
     }
- 
+
     return $src ? ['src' => $src, 'alt' => '', 'type' => 'image'] : null;
 }
- 
+
 // -> Nächstes Projekt (nach dem letzten kommt wieder das erste)
 function get_next_projekt(int $id): ?array
 {

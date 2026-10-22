@@ -1,7 +1,7 @@
 <?php
 use Carbon_Fields\Container;
 use Carbon_Fields\Field;
- 
+
 // -> Inhaltsfelder für einzelne Projekte
 Container::make('post_meta', 'Projektdetails')
     ->where('post_type', '=', 'projekt')
@@ -16,8 +16,10 @@ Container::make('post_meta', 'Projektdetails')
             ])
             ->set_default_value('orange')
             ->set_width(25),
-        Field::make('text', 'jahr', 'Jahr')
-            ->set_attribute('type', 'number')
+        Field::make('date', 'datum', 'Datum')
+            ->set_input_format('d.m.Y', 'd.m.Y')
+            ->set_storage_format('Y-m-d')
+            ->set_help_text('Bestimmt die Reihenfolge (neuestes zuerst). Auf der Website steht nur das Jahr.')
             ->set_width(25),
         Field::make('text', 'rolle', 'Meine Rolle')
             ->set_help_text('z. B. Kamera, Schnitt')

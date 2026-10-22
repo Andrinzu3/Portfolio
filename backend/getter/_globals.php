@@ -86,7 +86,17 @@ function get_intro_medien(): array
     $ids = carbon_get_theme_option('intro_medien') ?: [];
     $medien = [];
     foreach (array_slice($ids, 0, 5) as $id) {
-        $medien[] = get_media_by_id($id, 'xl');
+        $mime = get_post_mime_type($id) ?: '';
+        if (strpos($mime, 'video/') === 0) {
+            $medien[] = ['type' => 'video', 'src' => wp_get_attachment_url($id)];
+            continue;
+        }
+        // Bilder: passende Grösse statt Original -> Browser lädt nur so gross wie nötig
+        $medien[] = [
+            'type'   => 'image',
+            'src'    => wp_get_attachment_image_url($id, '1536x1536') ?: wp_get_attachment_image_url($id, 'large'),
+            'srcset' => wp_get_attachment_image_srcset($id, 'full') ?: '',
+        ];
     }
     return $medien;
 }
