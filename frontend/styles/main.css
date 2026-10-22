@@ -1,9 +1,9 @@
 @import url('./_resets.css');
- 
+
 /* ==========================================================
    Portfolio Andrin Zünd
    ========================================================== */
- 
+
 :root {
     --bg: #12100E;
     --fg: #FFFFFF;
@@ -16,7 +16,7 @@
     --font: 'Archivo', system-ui, sans-serif;
     --font-title: 'Montserrat', 'Archivo', sans-serif;
 }
- 
+
 html { scroll-behavior: smooth; }
 body {
     margin: 0;
@@ -35,11 +35,11 @@ img, video { display: block; max-width: 100%; }
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
     overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
- 
+
 /* -> Eckige Klammern um farbige Texte und Titel */
 .br::before, .label::before { content: '['; }
 .br::after, .label::after { content: ']'; }
- 
+
 .label {
     margin: 0;
     font-family: var(--font);
@@ -48,28 +48,21 @@ img, video { display: block; max-width: 100%; }
     color: var(--accent);
 }
 .muted { color: var(--muted); margin: 0; font-size: 15px; }
- 
+
 /* -> Filmkorn über der ganzen Seite */
 .grain {
+    /* -> Statisches Korn: kleine Kachel, wird nur einmal berechnet (keine Animation) */
     position: fixed;
-    inset: -50%;
-    width: 200%;
-    height: 200%;
+    inset: 0;
     pointer-events: none;
     z-index: 100;
     opacity: 0.3;
     mix-blend-mode: screen;
-    animation: grain 0.6s steps(5) infinite;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 220px 220px;
 }
-@keyframes grain {
-    0%   { transform: translate(0, 0); }
-    20%  { transform: translate(-3%, 2%); }
-    40%  { transform: translate(2%, -3%); }
-    60%  { transform: translate(-2%, -1%); }
-    80%  { transform: translate(3%, 3%); }
-    100% { transform: translate(0, 0); }
-}
- 
+.grain svg { display: none; }
+
 /* ==========================================================
    Header & Footer
    ========================================================== */
@@ -90,7 +83,7 @@ img, video { display: block; max-width: 100%; }
 .logo { display: block; height: 30px; width: auto; }
 .site-header__nav { display: flex; flex-wrap: wrap; gap: 32px; }
 .is-active { color: var(--accent); }
- 
+
 .site-footer {
     position: relative;
     z-index: 10;
@@ -118,7 +111,7 @@ img, video { display: block; max-width: 100%; }
     color: var(--muted);
 }
 .site-footer__links { display: flex; flex-wrap: wrap; gap: 28px; }
- 
+
 /* ==========================================================
    Startseite
    ========================================================== */
@@ -149,13 +142,13 @@ img, video { display: block; max-width: 100%; }
 .hero__shade { position: absolute; inset: 0; background: rgba(11, 11, 10, 0.38); }
 .hero__media.is-done .hero__frame,
 .hero__media.is-done .hero__shade { display: none; }
- 
+
 .hero__name { position: relative; z-index: 2; transform-origin: 50% 47%; will-change: transform, opacity; }
 .hero__grow { transform-origin: 50% 47%; animation: name-grow 9s cubic-bezier(.15, .4, .35, 1) forwards; }
 @keyframes name-grow { from { transform: scale(.86); } to { transform: scale(1.06); } }
 .hero__title { margin: 0; line-height: 0; }
 .wordmark { display: block; width: min(76vw, 1040px); height: auto; }
- 
+
 .hero__sub {
     position: absolute;
     left: var(--pad);
@@ -166,19 +159,19 @@ img, video { display: block; max-width: 100%; }
     font-size: 28px;
     line-height: 1.25;
 }
- 
+
 /* -> Intro nur beim ersten Laden bzw. Neuladen, nicht beim Navigieren */
 .intro-seen .hero__frame,
 .intro-seen .hero__shade { display: none; }
 .intro-seen .hero__grow { animation: none; transform: scale(1.06); }
- 
+
 /* -> Während dem Intro: Header weg, Bilder über den ganzen Bildschirm */
 .site-header { transition: opacity .6s ease; }
 .intro-running .home .site-header { opacity: 0; pointer-events: none; }
 .intro-running .home .hero__media { position: fixed; inset: 0; }
- 
+
 .after-hero { position: relative; z-index: 10; background: var(--bg); padding-top: 1px; }
- 
+
 .bereiche {
     display: flex;
     flex-wrap: wrap;
@@ -191,7 +184,7 @@ img, video { display: block; max-width: 100%; }
     font-size: 17px;
     color: var(--accent);
 }
- 
+
 .section { padding: 96px var(--pad); }
 .section-title {
     margin: 0 0 40px;
@@ -201,7 +194,7 @@ img, video { display: block; max-width: 100%; }
     line-height: 1;
     text-transform: uppercase;
 }
- 
+
 .projekt-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
@@ -214,7 +207,7 @@ img, video { display: block; max-width: 100%; }
 .teaser__title { font-family: var(--font-title); font-size: 19px; font-weight: 700; }
 .teaser:hover .teaser__title { color: var(--accent); }
 .teaser__info { font-size: 14px; color: var(--muted); white-space: nowrap; }
- 
+
 /* ==========================================================
    Unterseiten
    ========================================================== */
@@ -238,7 +231,7 @@ img, video { display: block; max-width: 100%; }
 }
 .back-link { font-size: 13px; color: var(--accent); }
 .page-intro__text { margin: 10px 0 0; max-width: 680px; font-size: 17px; line-height: 1.45; color: #A8A49B; }
- 
+
 .infobar {
     display: flex;
     flex-wrap: wrap;
@@ -254,13 +247,13 @@ img, video { display: block; max-width: 100%; }
 .info { display: flex; flex-direction: column; gap: 6px; }
 .info__label { font-size: 11px; color: var(--muted); }
 .info__value { color: var(--accent); }
- 
+
 .projekt-body {
     display: grid;
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     gap: 48px;
     align-items: start;
-    padding: 32px var(--pad) 72px;
+    padding: 32px var(--pad) 32px;
 }
 .projekt-text { display: flex; flex-direction: column; gap: 20px; }
 .projekt-text .lead { font-size: clamp(18px, 1.6vw, 22px); }
@@ -277,7 +270,7 @@ img, video { display: block; max-width: 100%; }
     font-size: 15px;
     color: var(--accent);
 }
- 
+
 .split {
     display: flex;
     flex-wrap: wrap;
@@ -292,17 +285,16 @@ img, video { display: block; max-width: 100%; }
 .body-text, .richtext { font-size: 17px; line-height: 1.65; color: var(--soft); }
 .richtext p { margin: 0 0 1em; }
 .richtext a { color: var(--accent); text-decoration: underline; }
- 
+
 .galerie {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
-    gap: 32px 20px;
-    padding: 0 var(--pad) 96px;
+    /* -> Bilder in ihrem echten Format (nicht abgeschnitten), wie ein Mauerwerk */
+    columns: 3 280px;
+    column-gap: 20px;
+    padding: 0 var(--pad) 50vh; /* Platz, damit «Nächstes Projekt» erst beim Scrollen kommt */
 }
-.galerie__item { margin: 0; display: flex; flex-direction: column; gap: 10px; }
-.galerie__item img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: var(--card); }
-.galerie__item figcaption { font-size: 15px; color: var(--accent); }
- 
+.galerie__item { margin: 0 0 20px; break-inside: avoid; }
+.galerie__item img { display: block; width: 100%; height: auto; background: var(--card); }
+
 .next-projekt {
     display: flex;
     flex-direction: column;
@@ -319,7 +311,7 @@ img, video { display: block; max-width: 100%; }
     line-height: 1;
 }
 .next-projekt:hover .next-projekt__title { color: var(--accent); }
- 
+
 /* -> Über mich */
 .about { display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start; padding: 8px var(--pad) 72px; }
 .about__portrait { margin: 0; flex: 1 1 260px; max-width: 380px; display: flex; flex-direction: column; gap: 12px; }
@@ -329,7 +321,7 @@ img, video { display: block; max-width: 100%; }
 .about__text .lead { font-size: clamp(18px, 1.6vw, 22px); line-height: 1.35; max-width: 820px; }
 .about__text .body-text { margin: 0; max-width: 640px; }
 .about__text .infobar--inline { border-top: 1px solid var(--line); }
- 
+
 .station {
     display: flex;
     flex-wrap: wrap;
@@ -342,14 +334,60 @@ img, video { display: block; max-width: 100%; }
 .station__zeit { flex: 0 0 140px; font-size: 14px; color: var(--accent); }
 .station__titel { flex: 1 1 300px; font-family: var(--font-title); font-size: 18px; font-weight: 700; }
 .station__ort { flex: 0 1 240px; font-size: 14px; color: var(--muted); }
- 
+
 /* -> Impressum */
 .adresse { font-style: normal; font-size: 18px; line-height: 1.5; }
 .ds-item { display: flex; flex-direction: column; gap: 8px; padding: 20px 0; border-top: 1px solid var(--line); }
 .ds-item:first-child { padding-top: 0; border-top: 0; }
 .ds-item .body-text { margin: 0; font-size: 17px; }
 .split .section-title { margin-bottom: 12px; font-size: clamp(22px, 2vw, 30px); font-weight: 800; }
- 
+
+/* -> Kontakt */
+.site-footer__kontakt { display: inline-block; }
+.site-footer__kontakt:hover { color: var(--fg); }
+.kontakt-info { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.kontakt-info__mail { font-family: var(--font-title); font-size: 18px; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.kontakt-info__link { font-size: 15px; color: var(--muted); }
+.kontakt-info__link:hover, .kontakt-info__mail:hover { color: var(--fg); }
+
+.formular { display: flex; flex-direction: column; gap: 24px; }
+.formular__reihe { display: flex; flex-wrap: wrap; gap: 24px; }
+.formular__reihe .feld { flex: 1 1 220px; }
+.feld { display: flex; flex-direction: column; gap: 8px; }
+.feld__label { font-size: 13px; color: var(--muted); }
+.feld input,
+.feld textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 0;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    font-size: 17px;
+    transition: border-color .2s;
+}
+.feld textarea { resize: vertical; min-height: 140px; }
+.feld input:focus,
+.feld textarea:focus { outline: none; border-bottom-color: var(--accent); }
+.formular__falle { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.formular__senden {
+    align-self: flex-start;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--accent);
+    font-family: var(--font-title);
+    font-size: 20px;
+    font-weight: 800;
+    cursor: pointer;
+}
+.formular__senden:hover { color: var(--fg); }
+.formular-meldung { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.formular-meldung--fehler { padding: 14px 0; border-top: 1px solid var(--accent); border-bottom: 1px solid var(--accent); color: var(--accent); font-size: 15px; }
+
 /* ==========================================================
    Bilder "entwickeln" sich (Negativ -> Bild)
    ========================================================== */
@@ -358,14 +396,14 @@ img, video { display: block; max-width: 100%; }
     transition: filter 2.2s cubic-bezier(.3, .6, .2, 1);
 }
 .dev-img.is-developed { filter: none; }
- 
+
 /* ==========================================================
    Tablet
    ========================================================== */
 @media (max-width: 900px) {
     .projekt-body { grid-template-columns: 1fr; gap: 40px; }
 }
- 
+
 /* ==========================================================
    Smartphone
    ========================================================== */
@@ -383,16 +421,16 @@ img, video { display: block; max-width: 100%; }
     .page-title, .projekt-title { font-size: 8vw; overflow-wrap: anywhere; }
     .projekt-body { gap: 32px; padding-top: 32px; padding-bottom: 56px; }
     .about { padding-bottom: 56px; gap: 32px; }
-    .galerie { padding-bottom: 56px; }
+    .galerie { columns: 2 140px; column-gap: 12px; padding-bottom: 40vh; }
+    .galerie__item { margin-bottom: 12px; }
     .next-projekt { padding: 44px var(--pad) 52px; }
     .site-footer { padding-top: 64px; padding-bottom: 32px; }
     .site-footer__mail { margin-bottom: 36px; }
 }
- 
+
 /* -> Weniger Bewegung, wenn im System eingestellt */
 @media (prefers-reduced-motion: reduce) {
-    .grain, .hero__grow, .hero__frame.is-active { animation: none; }
+    .hero__grow, .hero__frame.is-active { animation: none; }
     .dev-img { filter: none; transition: none; }
     html { scroll-behavior: auto; }
 }
-

@@ -1,8 +1,5 @@
 <?php
 
-// todo: Hier die Getter für die Globalen Informationen definieren
-
-
 // -> Die drei Akzentfarben der Seite
 function get_akzentfarben(): array
 {
@@ -32,6 +29,9 @@ function get_page_accent(): string
     if (is_page_template('template-impressum.php')) {
         return get_akzent_hex('gruen');
     }
+    if (is_page_template('template-kontakt.php')) {
+        return get_akzent_hex('orange');
+    }
     return get_akzent_hex('orange');
 }
 
@@ -46,6 +46,9 @@ function get_active_nav(): string
     }
     if (is_page_template('template-impressum.php')) {
         return 'impressum';
+    }
+    if (is_page_template('template-kontakt.php')) {
+        return 'kontakt';
     }
     return '';
 }

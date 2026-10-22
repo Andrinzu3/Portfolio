@@ -13,4 +13,5 @@
 require_once __DIR__ . '/_globals.php';
 require_once __DIR__ . '/_projekt.php';
 require_once __DIR__ . '/_seiten.php';
+require_once __DIR__ . '/_kontakt.php';
 // require_once __DIR__ . '/_getter.php';

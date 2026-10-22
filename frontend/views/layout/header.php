@@ -3,7 +3,7 @@ $active = get_active_nav();
 $nav = [
     'projekte'   => ['Projekte', home_url('/#projekte')],
     'ueber-mich' => ['Über mich', get_page_url_by_template('template-ueber-mich.php')],
-    'kontakt'    => ['Kontakt', '#kontakt'],
+    'kontakt'    => ['Kontakt', get_page_url_by_template('template-kontakt.php')],
 ];
 ?>
 <div class="grain" aria-hidden="true">
