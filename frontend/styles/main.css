@@ -134,15 +134,19 @@ img, video { display: block; max-width: 100%; }
 }
 .hero__media { position: absolute; inset: 0; overflow: hidden; }
 .hero__frame {
+    /* -> Bild füllt immer den ganzen Bildschirm (keine Streifen links/rechts) */
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: center;
     opacity: 0;
 }
 .hero__frame.is-active { opacity: 1; animation: intro-zoom 300ms linear forwards; }
-@keyframes intro-zoom { from { transform: scale(1); } to { transform: scale(1.12); } }
+@keyframes intro-zoom { from { transform: scale(1.15); } to { transform: scale(1.3); } }
 .hero__shade { position: absolute; inset: 0; background: rgba(11, 11, 10, 0.38); }
 .hero__media.is-done .hero__frame,
 .hero__media.is-done .hero__shade { display: none; }
@@ -210,15 +214,16 @@ img, video { display: block; max-width: 100%; }
 /* -> Während dem Intro: Header weg, Bilder über den ganzen Bildschirm */
 .site-header { transition: opacity .6s ease; }
 .intro-running .home .site-header { opacity: 0; pointer-events: none; }
-.intro-running .home .hero__media { position: fixed; inset: 0; }
+.intro-running .hero__media { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100svh; }
 
 .after-hero { position: relative; z-index: 10; background: var(--bg); padding-top: 1px; }
 
 /* -> Filmstreifen mit den Bereichen, wird endlos durchtransportiert */
 .filmstreifen {
     overflow: hidden;
-    border-top: 1px solid var(--accent);
-    border-bottom: 1px solid var(--accent);
+    background: #1E1913; /* Filmträger */
+    border-top: 1px solid var(--fg);    /* weisse Linie oben */
+    border-bottom: 1px solid var(--fg); /* weisse Linie unten */
 }
 .filmstreifen__band {
     display: flex;
@@ -229,18 +234,24 @@ img, video { display: block; max-width: 100%; }
 @keyframes film-transport { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .filmstreifen__spur {
     display: flex;
-    padding: 17px 0; /* Platz für die Löcher oben und unten */
-    /* Perforation: kleine abgerundete Rechtecke oben und unten */
+    padding: 22px 0; /* Platz für die Löcher oben und unten */
+    /* Perforation: orange abgerundete Löcher oben und unten */
     background:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='5'%3E%3Crect x='0' y='0' width='8' height='5' rx='1.5' fill='%23F0A23B'/%3E%3C/svg%3E") left 5px / 16px 5px repeat-x,
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='5'%3E%3Crect x='0' y='0' width='8' height='5' rx='1.5' fill='%23F0A23B'/%3E%3C/svg%3E") left calc(100% - 5px) / 16px 5px repeat-x;
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='8'%3E%3Crect width='10' height='8' rx='2' fill='%23F0A23B'/%3E%3C/svg%3E") left 7px / 20px 8px repeat-x,
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='8'%3E%3Crect width='10' height='8' rx='2' fill='%23F0A23B'/%3E%3C/svg%3E") left calc(100% - 7px) / 20px 8px repeat-x;
 }
 .filmstreifen__bild {
-    width: 208px; /* Vielfaches von 16px, damit die Löcher nahtlos weiterlaufen */
-    text-align: center;
-    font-size: 14px;
-    line-height: 1.4;
-    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 240px; /* Vielfaches von 20px, damit die Löcher nahtlos weiterlaufen */
+    height: 44px;
+    border-right: 1px solid var(--fg); /* weisser Bildstrich zwischen den Bildern */
+    box-sizing: border-box;
+    font-size: 11px;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--fg); /* weisse Wörter */
     white-space: nowrap;
 }
 .filmstreifen .br::before,
@@ -476,7 +487,7 @@ img, video { display: block; max-width: 100%; }
     .logo { height: 24px; }
     .hero { min-height: 100svh; height: 100svh; padding: 24px var(--pad) 120px; }
     .hero__sub { bottom: 28px; font-size: 20px; }
-    .filmstreifen__bild { width: 144px; font-size: 13px; }
+    .filmstreifen__bild { width: 160px; height: 36px; font-size: 10px; }
     .section { padding-top: 56px; padding-bottom: 56px; gap: 24px; }
     .split { padding-top: 32px; padding-bottom: 32px; gap: 20px; }
     .page-intro { padding-top: 8px; padding-bottom: 24px; }
