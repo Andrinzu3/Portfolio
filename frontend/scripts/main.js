@@ -126,6 +126,26 @@ function initDevelop() {
     images.forEach((img) => observer.observe(img));
 }
 
+// -> Filmstreifen-Clips: nur die Videos abspielen, die gerade im Bild sind (spart Leistung)
+function initFilmstreifen() {
+    const videos = [...document.querySelectorAll('.filmstreifen--clips video')];
+    if (!videos.length) return;
+    if (reduceMotion) {
+        videos.forEach((v) => { v.removeAttribute('autoplay'); v.pause(); });
+        return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.play().catch(() => {});
+            } else {
+                entry.target.pause();
+            }
+        });
+    }, { rootMargin: '0px 200px' });
+    videos.forEach((v) => observer.observe(v));
+}
 initIntro();
 initScrollName();
 initDevelop();
+initFilmstreifen();

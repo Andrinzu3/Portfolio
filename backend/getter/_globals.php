@@ -107,3 +107,9 @@ function get_bereiche(): array
     $text = carbon_get_theme_option('bereiche') ?: '';
     return array_values(array_filter(array_map('trim', explode(',', $text))));
 }
+// -> Clips für den Filmstreifen (URLs der hochgeladenen Videos)
+function get_filmstreifen_clips(): array
+{
+    $ids = carbon_get_theme_option('filmstreifen_clips') ?: [];
+    return array_values(array_filter(array_map('wp_get_attachment_url', $ids)));
+}

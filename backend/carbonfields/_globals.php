@@ -13,6 +13,12 @@ Container::make('theme_options', 'Globales')
         Field::make('text', 'bereiche', 'Bereiche (mit Komma getrennt)')
             ->set_default_value('Fotografie, Film, Kamera, Schnitt, Regie')
             ->set_help_text('Erscheinen als orange Zeile unter dem Intro.'),
+        Field::make('media_gallery', 'filmstreifen_clips', 'Filmstreifen-Clips')
+            ->set_type(['video'])
+            ->set_help_text('Ein Clip pro Filmbild, ca. 6 Stück. MP4 ohne Ton, 2–5 Sekunden, ca. 480 px breit. Sie werden automatisch orange eingefärbt. Leer lassen = Wörter wie bisher.'),
+        Field::make('checkbox', 'filmstreifen_umkehren', 'Clips umkehren (für dunkle Linien auf weissem Grund)')
+            ->set_option_value('yes')
+            ->set_default_value('yes'),
     ])
     ->add_tab('Kontakt', [
         Field::make('text', 'email', 'E-Mail')
