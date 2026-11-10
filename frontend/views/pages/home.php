@@ -1,21 +1,17 @@
 <?php
-$medien = get_intro_medien();
-$bereiche = get_bereiche();
 $clips = get_filmstreifen_clips();
 $projekte = get_projekt_ids();
+$ich = get_ueber_mich_kurz();
 ?>
-<section class="hero" data-hero>
-    <div class="hero__media" aria-hidden="true">
-        <?php foreach ($medien as $i => $m) : ?>
-            <?php if ($m['type'] === 'image') : ?>
-                <img class="hero__frame" data-intro-frame src="<?= esc_url($m['src']) ?>"<?php if ($m['srcset']) : ?> srcset="<?= esc_attr($m['srcset']) ?>" sizes="100vw"<?php endif; ?> alt="" decoding="async"<?= $i === 0 ? ' fetchpriority="high"' : '' ?>>
-            <?php else : ?>
-                <video class="hero__frame" data-intro-frame src="<?= esc_url($m['src']) ?>" muted autoplay loop playsinline preload="auto"></video>
-            <?php endif; ?>
+<div class="intro-ringe" aria-hidden="true">
+    <div class="hero__ringe">
+        <?php // Zwei Schläge ("dum dum"), pro Schlag zwei Ringe kurz hintereinander
+        foreach ([0, 0.14, 0.55, 0.69] as $start) : ?>
+            <span class="ring" style="--start: <?= $start ?>s"></span>
         <?php endforeach; ?>
-        <div class="hero__shade" data-intro-shade></div>
     </div>
-
+</div>
+<section class="hero" data-hero>
     <div class="hero__name" data-scroll-name>
         <div class="hero__grow">
             <h1 class="hero__title">
@@ -36,37 +32,27 @@ $projekte = get_projekt_ids();
         }
         $dauer = round(count($bilder) * 180 / 25); // gleichbleibendes, ruhiges Tempo
         ?>
-        <div class="filmstreifen filmstreifen--clips" aria-hidden="true">
-            <div class="filmstreifen__band" style="animation-duration: <?= $dauer ?>s">
-                <?php for ($i = 0; $i < 2; $i++) : // zweimal hintereinander = nahtlose Schlaufe ?>
-                    <div class="filmstreifen__spur">
-                        <?php foreach ($bilder as $src) : ?>
-                            <span class="filmstreifen__bild">
-                                <video src="<?= esc_url($src) ?>#t=0.1" muted loop playsinline preload="metadata"></video>
-                            </span>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endfor; ?>
-            </div>
-        </div>
-    <?php elseif ($bereiche) : ?>
-        <?php
-        // -> Wörter so oft wiederholen, dass der Streifen breiter als der Bildschirm ist
-        $bilder = $bereiche;
-        while (count($bilder) < 10) {
-            $bilder = array_merge($bilder, $bereiche);
-        }
-        ?>
-        <div class="filmstreifen">
-            <span class="sr-only"><?= esc_html(implode(', ', $bereiche)) ?></span>
-            <div class="filmstreifen__band" aria-hidden="true">
-                <?php for ($i = 0; $i < 2; $i++) : // zweimal hintereinander = nahtlose Schlaufe ?>
-                    <div class="filmstreifen__spur">
-                        <?php foreach ($bilder as $b) : ?>
-                            <span class="filmstreifen__bild"><span class="br"><?= esc_html($b) ?></span></span>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endfor; ?>
+        <div class="filmstreifen-wrap">
+            <?php if ($ich['url']) : // Porträt hinter dem Streifen + Link "Über mich" ?>
+                <a class="filmstreifen__ich" href="<?= esc_url($ich['url']) ?>">
+                    <?php if ($ich['bild']) : ?>
+                         <img src="<?= esc_url($ich['bild']['src']) ?>" alt="<?= esc_attr($ich['bild']['alt']) ?>" decoding="async">
+                    <?php endif; ?>
+                    <span class="filmstreifen__ich-text br">Über mich</span>
+                </a>
+            <?php endif; ?>
+            <div class="filmstreifen filmstreifen--clips" aria-hidden="true">
+                <div class="filmstreifen__band" style="animation-duration: <?= $dauer ?>s">
+                    <?php for ($i = 0; $i < 2; $i++) : // zweimal hintereinander = nahtlose Schlaufe ?>
+                        <div class="filmstreifen__spur">
+                            <?php foreach ($bilder as $src) : ?>
+                                <span class="filmstreifen__bild">
+                                     <video src="<?= esc_url($src) ?>#t=0.1" muted loop playsinline preload="none"></video>
+                                </span>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endfor; ?>
+                </div>
             </div>
         </div>
     <?php endif; ?>

@@ -29,9 +29,6 @@ function get_page_accent(): string
     if (is_page_template('template-impressum.php')) {
         return get_akzent_hex('gruen');
     }
-    if (is_page_template('template-kontakt.php')) {
-        return get_akzent_hex('orange');
-    }
     return get_akzent_hex('orange');
 }
 
@@ -46,9 +43,6 @@ function get_active_nav(): string
     }
     if (is_page_template('template-impressum.php')) {
         return 'impressum';
-    }
-    if (is_page_template('template-kontakt.php')) {
-        return 'kontakt';
     }
     return '';
 }
@@ -80,33 +74,6 @@ function get_kontakt(): array
     ];
 }
 
-// -> Intro-Medien der Startseite (max. 5)
-function get_intro_medien(): array
-{
-    $ids = carbon_get_theme_option('intro_medien') ?: [];
-    $medien = [];
-    foreach (array_slice($ids, 0, 5) as $id) {
-        $mime = get_post_mime_type($id) ?: '';
-        if (strpos($mime, 'video/') === 0) {
-            $medien[] = ['type' => 'video', 'src' => wp_get_attachment_url($id)];
-            continue;
-        }
-        // Bilder: passende Grösse statt Original -> Browser lädt nur so gross wie nötig
-        $medien[] = [
-            'type'   => 'image',
-            'src'    => wp_get_attachment_image_url($id, '1536x1536') ?: wp_get_attachment_image_url($id, 'large'),
-            'srcset' => wp_get_attachment_image_srcset($id, 'full') ?: '',
-        ];
-    }
-    return $medien;
-}
-
-// -> Bereiche als Liste ("Fotografie, Film" -> ['Fotografie', 'Film'])
-function get_bereiche(): array
-{
-    $text = carbon_get_theme_option('bereiche') ?: '';
-    return array_values(array_filter(array_map('trim', explode(',', $text))));
-}
 // -> Clips für den Filmstreifen (URLs der hochgeladenen Videos)
 function get_filmstreifen_clips(): array
 {
