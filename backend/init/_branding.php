@@ -46,3 +46,54 @@ add_filter('login_headerurl', function () {
 add_filter('login_headertext', function () {
     return 'Andrin Zünd';
 });
+// Baut aus einem Logo-SVG ein Favicon mit dunklem Quadrat
+function az_favicon_svg($datei) {
+    $pfad = get_template_directory() . '/frontend/assets/img/' . $datei;
+    if (!file_exists($pfad)) return '';
+
+    $logo = file_get_contents($pfad);
+    $logo = preg_replace('/<\?xml.*?\?>/s', '', $logo);
+    $logo = preg_replace('/<!--.*?-->/s', '', $logo);
+
+    // Logo mittig ins Quadrat setzen
+    $logo = preg_replace_callback('/<svg\b[^>]*>/', function ($m) {
+        $tag = preg_replace('/\s(x|y|width|height)="[^"]*"/', '', $m[0]);
+        return str_replace('<svg', '<svg x="10" y="24" width="80" height="52"', $tag);
+    }, $logo, 1);
+
+    $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
+         . '<rect width="100" height="100" rx="20" fill="#12100E"/>'
+         . $logo . '</svg>';
+
+    return 'data:image/svg+xml,' . rawurlencode($svg);
+}
+
+// Favicon: wechselt alle 2 Sekunden die Farbe
+function az_favicon() {
+    $icons = array_values(array_filter([
+        az_favicon_svg('AZ_orange.svg'),
+        az_favicon_svg('AZ_blau.svg'),
+        az_favicon_svg('AZ_gruen.svg'),
+    ]));
+
+    if (!$icons) {
+        echo '<!-- AZ-Favicon: keine Logo-Dateien in frontend/assets/img gefunden -->';
+        return;
+    }
+    ?>
+    <link rel="icon" type="image/svg+xml" id="az-favicon" href="<?php echo esc_attr($icons[0]); ?>">
+    <script>
+    (function () {
+        var icons = <?php echo wp_json_encode($icons); ?>;
+        var i = 0;
+        setInterval(function () {
+            i = (i + 1) % icons.length;
+            document.getElementById('az-favicon').href = icons[i];
+        }, 2000);
+    })();
+    </script>
+    <?php
+}
+add_action('wp_head', 'az_favicon');
+add_action('admin_head', 'az_favicon');
+add_action('login_head', 'az_favicon');
