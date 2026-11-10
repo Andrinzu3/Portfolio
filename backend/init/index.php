@@ -138,3 +138,8 @@ function block_disabled_design_pages (): void {
 }
 
 add_action('admin_init', 'block_disabled_design_pages');
+
+add_action('admin_init', 'block_disabled_design_pages');
+
+// -> eigenes Branding (Logo)
+require_once __DIR__ . '/_branding.php';
