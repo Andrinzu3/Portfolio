@@ -7,7 +7,7 @@
 
 // Pfad zum Logo (liegt im Theme unter assets/img/)
 function az_logo_url() {
-    return get_template_directory_uri() . '/frontend/assets/img/AZ_orange.svg';
+    return get_template_directory_uri() . '/frontend/assets/img/AZ orange.svg';
 }
 
 // 1) Admin-Leiste: WP-Logo entfernen, AZ-Logo einsetzen
